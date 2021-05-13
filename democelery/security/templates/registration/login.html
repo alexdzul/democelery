@@ -1,0 +1,27 @@
+{% extends "base_security.html" %}
+{% load i18n widget_tweaks %}
+{% block content %}
+    <form method="post" class="form-signin" action="{% url 'login' %}">
+        {% csrf_token %}
+        <h1 class="h3 mb-3 font-weight-normal">{% trans 'Ingresar' %}</h1>
+        <label for="inputEmail" class="sr-only">{{ form.username.label_tag }}</label>
+        {{ form.username|add_class:"form-control"|attr:"autofocus:autofocus" }}<br>
+        <label for="inputPassword" class="sr-only pt-2">{{ form.password.label_tag }}</label>
+        {{ form.password|add_class:"form-control" }}
+        <input type="hidden" name="next" value="{{ next }}">
+        <button class="btn btn-lg btn-primary btn-block" type="submit">{% trans 'Ingresar' %}</button>
+        {% if form.errors %}
+            <small class="text-danger text-center">{% trans 'Credenciales incorrentas, intenta de nuevo' %}</small>
+        {% endif %}
+        {% if next %}
+            {% if user.is_authenticated %}
+                <small class="text-danger text-center">{% trans 'No cuentas con permisos para ver este contenido, por favor ingresa tus credenciales' %}</small>
+            {% else %}
+                <small class="text-danger text-center">{% trans 'No cuentas con permisos para ver este contenido, por favor ingresa tus credenciales' %}</small>
+            {% endif %}
+        {% endif %}
+        <p class="mt-5 mb-3 text-muted">&copy; 2021-2025</p>
+        <p><a href="{% url 'password_reset' %}">Lost password?</a></p>
+
+    </form>
+{% endblock %}

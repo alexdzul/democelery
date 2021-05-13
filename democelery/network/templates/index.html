@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load i18n static %}
+{% block content %}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-info alert-dismissible fade show" role="alert">
+                {{ message|safe }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        {% endfor %}
+    {% endif %}
+    <div class="my-3 p-3 bg-white rounded shadow-sm">
+        <h6 class="border-bottom border-gray pb-2 mb-0">{% trans 'Suscribirme al boletín de noticias' %}</h6>
+        <form action="{% url 'network:create-subscriber' %}" method="post">
+            {% csrf_token %}
+            <div class="row g-3 mt-3 align-items-center">
+                <div class="col-auto">
+                    <label for="inputPassword6" class="col-form-label">{% trans "Nombre completo" %}</label>
+                </div>
+                <div class="col-auto">
+                    <input type="text" id="id_full_name" name="full_name" class="form-control-sm"
+                           aria-describedby="passwordHelpInline">
+                </div>
+                <div class="col-auto">
+                    <label for="inputPassword6" class="col-form-label">{% trans "Correo electrónico" %}</label>
+                </div>
+                <div class="col-auto">
+                    <input type="email" id="id_email" name="email" class="form-control-sm"
+                           aria-describedby="passwordHelpInline">
+                </div>
+                <div class="col-auto">
+                    <input type="submit" value="{% trans 'Registrarme' %}" class="btn btn-success btn-sm">
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="my-3 p-3 bg-white rounded shadow-sm">
+        <h6 class="border-bottom border-gray pb-2 mb-0">{% trans 'Nuestras publicaciones' %}</h6>
+        {% if object_list %}
+            {% for post in object_list %}
+                <div class="media text-muted pt-3">
+                    <svg class="bd-placeholder-img mr-2 rounded" width="32" height="32"
+                         xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32"
+                         preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title>
+                        <rect width="100%" height="100%" fill="#007bff"/>
+                        <text x="50%" y="50%" fill="#007bff" dy=".3em">32x32</text>
+                    </svg>
+                    <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+                        <strong class="d-block text-gray-dark">@{{ post.created_by.username }}</strong>
+                        {{ post.content }}
+                    </p>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="text-muted pt-3">
+                <div class="alert alert-primary" role="alert">
+                    {% trans '¡Ups! Aún no existen publicaciones' %}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+{% endblock content %}

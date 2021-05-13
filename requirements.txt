@@ -1,0 +1,4 @@
+Django==3.2.1
+psycopg2-binary==2.8.6
+django-widget-tweaks==1.4.8
+django-environ==0.4.5
