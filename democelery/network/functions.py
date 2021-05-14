@@ -1,26 +1,32 @@
+from django.contrib.auth.models import User
 from django.core.mail import EmailMultiAlternatives
+from .models import Subscriber, Post, Log
 
 
-def notify_new_content(subscribers, post):
+def notify_new_content(post_id):
     """
     Sending and email.
-    :param subscribers: A list of Subscriber objects.
-    :param post: A new post (content) in database.
+    :param post_id: Post id.
     """
+    subscribers = Subscriber.objects.all()
+    post = Post.objects.get(id=post_id)
     for subscriber in subscribers:
         html_content = f"¡Hola {subscriber.full_name}! Te informamos que tenemos " \
                        f"un nuevo contenido: <b>{post.title}<b>"
         msg = EmailMultiAlternatives(f"¡Nuevo contenido!", html_content, 'from@example.com', [subscriber.email])
         msg.attach_alternative(html_content, "text/html")
         msg.send()
+        log = Log(sent_to=subscriber.email, data=html_content)
+        log.save()
 
 
-def notify_new_subscriber(staffs, subscriber):
+def notify_new_subscriber(subscriber_id):
     """
     Sending and email.
-    :param staffs: A list of staff users objects.
-    :param subscriber: A new subscriber in database.
+    :param subscriber_id: Subscriber id
     """
+    subscriber = Subscriber.objects.get(id=subscriber_id)
+    staffs = User.objects.filter(is_staff=True)
     for user in staffs:
         html_content = f"¡Hola {user.first_name}! Te informamos se "\
                        f"registró una nueva persona:" \
@@ -29,3 +35,5 @@ def notify_new_subscriber(staffs, subscriber):
         msg = EmailMultiAlternatives(f"¡Nuevo suscriptor!", html_content, 'from@example.com', [user.email])
         msg.attach_alternative(html_content, "text/html")
         msg.send()
+        log = Log(sent_to=user.email, data=html_content)
+        log.save()
