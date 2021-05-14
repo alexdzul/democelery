@@ -29,3 +29,17 @@ class Post(models.Model):
         verbose_name = _("Publicación")
         verbose_name_plural = _("Publicaciones")
 
+
+class Log(models.Model):
+    sent_to = models.CharField(max_length=1000, verbose_name=_("Enviado a"))
+    data = models.TextField(verbose_name=_("Data"))
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.data
+
+    class Meta:
+        verbose_name = _("Log")
+        verbose_name_plural = _("Logs")
+
+

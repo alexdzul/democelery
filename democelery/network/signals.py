@@ -13,8 +13,7 @@ def send_mail_to_subscriber(sender, **kwargs):
     """
     if kwargs.get('created', False):
         post = kwargs.get("instance")
-        subscribers = Subscriber.objects.all()
-        notify_new_content(subscribers, post)
+        notify_new_content(post.id)
 
 
 @receiver(post_save, sender=Subscriber)
@@ -24,5 +23,4 @@ def new_subscriber(sender, **kwargs):
     """
     if kwargs.get('created', False):
         subscriber = kwargs.get("instance")
-        staffs = User.objects.all()
-        notify_new_subscriber(staffs, subscriber)
+        notify_new_subscriber(subscriber.id)

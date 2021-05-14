@@ -104,3 +104,24 @@ STATICFILES_DIRS = (
     os.path.join(__STATIC_PATH, "democelery/static"),
 )
 STATIC_ROOT = os.path.join(__STATIC_PATH, '../static')
+
+
+# Celery Configuration Options
+CELERY_TIMEZONE = "America/Merida"
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 30 * 60
+
+# Celery beat
+from democelery.celery import app
+from celery.schedules import timedelta, crontab
+
+
+app.conf.beat_schedule = {
+    'delete_logs': {
+        'task': 'democelery.network.tasks.delete_log',
+        'schedule': timedelta(seconds=5),
+    }
+}
+
+app.conf.timezone = CELERY_TIMEZONE
+
